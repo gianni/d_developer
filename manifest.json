@@ -1,6 +1,6 @@
 {
-  "name": "Developer chrome extension",
-  "version": "0.1",
+  "name": "D_Developer chrome extension",
+  "version": "0.2",
   "description": "",
   "background": {
     "persistent": false,
@@ -9,10 +9,13 @@
   "permissions": [
      "tabs",
      "cookies",
-     "*://*/"
+     "*://*/",
+     "storage"
   ],
   "icons": { "16": "yellow.png"},
+  "options_page": "options.html",
   "browser_action": {
+    "default_popup": "popup.html",
     "default_icon": {
       "16": "yellow.png"
     }
