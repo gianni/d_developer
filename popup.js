@@ -1,4 +1,5 @@
 chrome.storage.sync.get({
+    username: '',
     domain: '',
     settings: '',
     pwd_1:''
@@ -27,11 +28,22 @@ chrome.storage.sync.get({
         });
     }
 
-    function removecookie() {
-        chrome.cookies.remove({"url": "http://d2."+items.domain, "name": "developer"}, function(deleted_cookie) {});
-        chrome.cookies.remove({"url": "http://s2."+items.domain, "name": "developer"}, function(deleted_cookie) {});
+    function goStage() {
+        chrome.tabs.query({'active': true,'lastFocusedWindow': true,'highlighted':true,'currentWindow':true}, function (tabs) {
+            [tabs[0].url,"http://d2."+items.domain,"http://s2."+items.domain].forEach(function(domain){
+
+                chrome.cookies.getAll({"url":  domain}, function(cookies){
+                    cookies.forEach(function(cookie) {
+                        chrome.cookies.remove({"url": domain, "name": cookie.name}, function(deleted_cookie) {});
+                    });
+                });
+                chrome.tabs.executeScript(tabs[0].id, {code: 'window.location.reload();'});
+            });
+        });
+
         document.getElementById('d2').style="background-color:#FFFFFF";
         document.getElementById('s2').style="background-color:#FFFFFF";
+
     }
 
     function togglecookie() {
@@ -43,7 +55,7 @@ chrome.storage.sync.get({
                     document.getElementById(_this.dataset.value).style="background-color:#FFFFFF";
                 });
             } else {
-                chrome.cookies.set({"url": "http://"+_this.dataset.value+"."+items.domain, "name": "developer"}, function(set_cookie) {
+                chrome.cookies.set({"url": "http://"+_this.dataset.value+"."+items.domain, "name": "developer", "value":items.username}, function(set_cookie) {
                     document.getElementById(_this.dataset.value).style="background-color:#3ace61";
                 });
             }
@@ -62,6 +74,7 @@ chrome.storage.sync.get({
     document.getElementById('pwd_1').addEventListener('click', copy);
     document.getElementById('s2').addEventListener('click', togglecookie);
     document.getElementById('d2').addEventListener('click', togglecookie);
+    document.getElementById('gostage').addEventListener('click', goStage);
 
 });
 
