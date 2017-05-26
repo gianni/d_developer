@@ -19,6 +19,9 @@ chrome.storage.sync.get({
         }
     });
 
+    var devele=document.getElementById('developer');
+    devele.innerHTML=items.username;
+
 
     function goSettings() {
         chrome.tabs.query({'active': true, 'lastFocusedWindow': true, 'highlighted':true,'currentWindow':true}, function (tabs) {
@@ -43,6 +46,7 @@ chrome.storage.sync.get({
 
         document.getElementById('d2').style="background-color:#FFFFFF";
         document.getElementById('s2').style="background-color:#FFFFFF";
+        document.getElementById('developer').style="background-color:#FFFFFF";
 
     }
 
@@ -62,6 +66,20 @@ chrome.storage.sync.get({
         });
     }
 
+    function goEnv() {
+        var _this=this;
+
+        chrome.tabs.query({'active': true, 'lastFocusedWindow': true, 'highlighted':true,'currentWindow':true}, function (tabs) {
+            var url_parts = tabs[0].url.split("/");
+            var url = url_parts[0] + "//" + url_parts[2]+"/";
+            chrome.cookies.set({"url": url, "name": "developer", "value":items.username}, function(set_cookie) {
+                document.getElementById('developer').style="background-color:#3ace61";
+            });
+        });
+
+
+    }
+
     function copy() {
         document.oncopy = function(event) {
             event.clipboardData.setData('text/plain', items.pwd_1);
@@ -75,6 +93,7 @@ chrome.storage.sync.get({
     document.getElementById('s2').addEventListener('click', togglecookie);
     document.getElementById('d2').addEventListener('click', togglecookie);
     document.getElementById('gostage').addEventListener('click', goStage);
+    document.getElementById('developer').addEventListener('click', goEnv);
 
 });
 
